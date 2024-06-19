@@ -1,17 +1,33 @@
-version: '3.3'
+version: '3.9'
 services:
   db:
     image: postgres:latest
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - my_app:/var/lib/postgresql/data
     networks:
       - my_network
+
+  web:
+    build: .
+    command: ./bin/rails server -b 0.0.0.0 -p 3000
+    volumes:
+      - .:/rails
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@db:5432/${DATABASE_DB}
+    networks:
+      - my_network
+
 volumes:
   my_app:
+
 networks:
   my_network:
