@@ -45,6 +45,7 @@ end
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem 'dotenv-rails'
 end
 
 gem 'active_model_serializers'
@@ -58,5 +59,3 @@ gem 'rubocop'
 gem 'rubocop-rails'
 
 gem 'rubocop-capybara', '~> 2.21'
-
-gem 'dotenv-rails', groups: [:development, :test]

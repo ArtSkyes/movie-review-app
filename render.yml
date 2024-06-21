@@ -1,7 +1,7 @@
 databases:
   - name: movie-review-app
-    databaseName: moviedb
-    user: moviedbuser
+    databaseName: art_week2
+    user: ltvuser
     plan: free
 
 services:
