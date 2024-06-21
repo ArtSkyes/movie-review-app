@@ -7,7 +7,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   def index
     @movies = Movie.page(params[:page]).per(10)
-    render json: @movies, serializer: PaginatedMoviesSerializer
+    render json: @movies, each_serializer: Api::V1::PaginatedMoviesSerializer
   end
 
   api :GET, "/api/v1/movies/:id", "Show a movie"
