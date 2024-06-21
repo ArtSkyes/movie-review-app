@@ -5,8 +5,8 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   common_responses
 
   def index
-    @reviews = Review.where(movie_id: params[:movie_id]).page(params[:page]).per(10)
-    render json: @reviews, each_serializer: ReviewSerializer
+    @reviews = Review.page(params[:page]).per(10)
+    render json: @reviews, serializer: PaginatedReviewsSerializer
   end
 
   api :GET, "/api/v1/reviews/:id", "Show a review"
@@ -22,7 +22,7 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   param :movie_id, :number, required: true, desc: "Movie ID"
   param :content, String, required: true, desc: "Review content"
   param :rating, Integer, required: true, desc: "Review rating"
-  common_responses
+  common_responses_for_create
 
   def create
     @movie = Movie.find(params[:movie_id])
