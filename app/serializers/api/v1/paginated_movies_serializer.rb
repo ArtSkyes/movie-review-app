@@ -7,7 +7,7 @@ module Api
         object.map { |movie| Api::V1::MovieSerializer.new(movie) }
       end
 
-      delagate :previous_page, to: :object
+      delegate :previous_page, to: :object
 
       delegate :next_page, to: :object
 
