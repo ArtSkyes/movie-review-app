@@ -10,7 +10,7 @@ class Api::V1::ReviewsController < Api::V1::BaseController
 
   def index
     @reviews = @movie.reviews.page(params[:page] || 1).per(params[:per_page] || 10)
-    render json: @reviews, each_serializer: Api::V1::PaginatedReviewsSerializer
+    render json: @reviews, each_serializer: Api::V1::ReviewSerializer
   end
 
   api :GET, "/api/v1/reviews/:id", "Show a review"
