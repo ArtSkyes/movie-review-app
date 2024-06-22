@@ -8,7 +8,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   def index
     @movies = Movie.page(params[:page] || 1).per(params[:per_page] || 10)
-    render json: @movies, each_serializer: Api::V1::PaginatedMoviesSerializer
+    render json: @movies, meta: pagination_meta(@movies), each_serializer: Api::V1::MovieSerializer
   end
 
   api :GET, "/api/v1/movies/:id", "Show a movie"
@@ -59,7 +59,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   def destroy
     @movie.destroy
-    head :no_content
+    render json: { message: "Successfully deleted movie" }, status: :ok
   end
 
   private
@@ -71,5 +71,15 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   def movie_params
     params.require(:movie).permit(:title, :description, :release_date, :director, :rating)
+  end
+
+  def pagination_meta(objects)
+    {
+      current_page: objects.current_page,
+      next_page:    objects.next_page,
+      prev_page:    objects.prev_page, # use objects.previous_page with will_paginate
+      total_pages:  objects.total_pages,
+      total_count:  objects.total_count
+    }
   end
 end
