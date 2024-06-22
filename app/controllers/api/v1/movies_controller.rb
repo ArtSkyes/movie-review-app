@@ -77,7 +77,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
     {
       current_page: objects.current_page,
       next_page:    objects.next_page,
-      prev_page:    objects.prev_page, # use objects.previous_page with will_paginate
+      prev_page:    objects.prev_page,
       total_pages:  objects.total_pages,
       total_count:  objects.total_count
     }
