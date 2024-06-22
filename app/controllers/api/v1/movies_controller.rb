@@ -59,7 +59,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   def destroy
     @movie.destroy
-    head :no_content
+    render json: { message: "Successfully deleted movie" }, status: :ok
   end
 
   private
