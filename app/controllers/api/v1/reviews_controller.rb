@@ -1,11 +1,15 @@
 class Api::V1::ReviewsController < Api::V1::BaseController
+  before_action :find_movie, only: %i[index create]
+  before_action :find_review, only: %i[show update destroy]
+
   api :GET, "/api/v1/movies/:movie_id/reviews", "List reviews for a movie"
   param :movie_id, :number, required: true, desc: "Movie ID"
   param :page, :number, desc: "Page number"
+  param :per_page, :number, desc: "Number of reviews per page"
   common_responses
 
   def index
-    @reviews = Review.page(params[:page]).per(10)
+    @reviews = @movie.reviews.page(params[:page] || 1).per(params[:per_page] || 10)
     render json: @reviews, each_serializer: Api::V1::PaginatedReviewsSerializer
   end
 
@@ -14,7 +18,6 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   common_responses
 
   def show
-    @review = Review.find(params[:id])
     render json: @review, serializer: Api::V1::ReviewSerializer
   end
 
@@ -25,10 +28,9 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   common_responses_for_create
 
   def create
-    @movie = Movie.find(params[:movie_id])
     @review = @movie.reviews.build(review_params)
     if @review.save
-      render json: @review, serializer: ReviewSerializer, status: :created
+      render json: @review, serializer: Api::V1::ReviewSerializer, status: :created
     else
       render json: @review.errors, status: :unprocessable_entity
     end
@@ -41,9 +43,8 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   common_responses
 
   def update
-    @review = Review.find(params[:id])
     if @review.update(review_params)
-      render json: @review, serializer: ReviewSerializer
+      render json: @review, serializer: Api::V1::ReviewSerializer
     else
       render json: @review.errors, status: :unprocessable_entity
     end
@@ -54,12 +55,21 @@ class Api::V1::ReviewsController < Api::V1::BaseController
   common_responses
 
   def destroy
-    @review = Review.find(params[:id])
     @review.destroy
     head :no_content
   end
 
   private
+
+  def find_movie
+    @movie = Movie.find_by(id: params[:movie_id])
+    render json: { error: "Movie not found" }, status: :not_found if @movie.nil?
+  end
+
+  def find_review
+    @review = Review.find_by(id: params[:id])
+    render json: { error: "Review not found" }, status: :not_found if @review.nil?
+  end
 
   def review_params
     params.require(:review).permit(:content, :rating, :movie_id)

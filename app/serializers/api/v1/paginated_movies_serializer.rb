@@ -4,7 +4,7 @@ module Api
       attributes :previous_page, :next_page, :total_pages, :current_page, :total_count, :movies
 
       def movies
-        object.map { |movie| MovieSerializer.new(movie) }
+        object.map { |movie| Api::V1::MovieSerializer.new(movie) }
       end
 
       def previous_page
