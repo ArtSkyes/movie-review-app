@@ -7,9 +7,7 @@ module Api
         object.map { |review| Api::V1::ReviewSerializer.new(review) }
       end
 
-      def previous_page
-        object.prev_page
-      end
+      delegate :previous_page, to: :object
 
       delegate :next_page, to: :object
 
