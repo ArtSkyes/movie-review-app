@@ -72,4 +72,14 @@ class Api::V1::MoviesController < Api::V1::BaseController
   def movie_params
     params.require(:movie).permit(:title, :description, :release_date, :director, :rating)
   end
+
+  def pagination_meta(objects)
+    {
+      current_page: objects.current_page,
+      next_page:    objects.next_page,
+      prev_page:    objects.prev_page, # use objects.previous_page with will_paginate
+      total_pages:  objects.total_pages,
+      total_count:  objects.total_count
+    }
+  end
 end
