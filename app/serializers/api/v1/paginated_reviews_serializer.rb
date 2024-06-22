@@ -4,7 +4,7 @@ module Api
       attributes :previous_page, :next_page, :total_pages, :current_page, :total_count, :reviews
 
       def reviews
-        object.map { |review| ReviewSerializer.new(review) }
+        object.map { |review| Api::V1::ReviewSerializer.new(review) }
       end
 
       def previous_page

@@ -3,10 +3,11 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   api :GET, "/api/v1/movies", "List movies"
   param :page, :number, desc: "Page number"
+  param :per_page, :number, desc: "Number of movies per page"
   common_responses
 
   def index
-    @movies = Movie.page(params[:page]).per(10)
+    @movies = Movie.page(params[:page] || 1).per(params[:per_page] || 10)
     render json: @movies, each_serializer: Api::V1::PaginatedMoviesSerializer
   end
 
@@ -15,7 +16,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
   common_responses
 
   def show
-    render json: @movie, serializer: MovieSerializer
+    render json: @movie, serializer: Api::V1::MovieSerializer
   end
 
   api :POST, "/api/v1/movies", "Create a movie"
@@ -29,7 +30,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
   def create
     @movie = Movie.new(movie_params)
     if @movie.save
-      render json: @movie, serializer: MovieSerializer, status: :created
+      render json: @movie, serializer: Api::V1::MovieSerializer, status: :created
     else
       render json: @movie.errors, status: :unprocessable_entity
     end
@@ -46,7 +47,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   def update
     if @movie.update(movie_params)
-      render json: @movie, serializer: MovieSerializer
+      render json: @movie, serializer: Api::V1::MovieSerializer
     else
       render json: @movie.errors, status: :unprocessable_entity
     end
