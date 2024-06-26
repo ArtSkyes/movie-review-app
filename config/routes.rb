@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
   apipie
-  namespace :api, defaults: { format: :json } do
+
+  # Root route
+  root to: redirect('/apipie')
+
+  namespace :api do
     namespace :v1 do
-      resources :hotels, only: [:index, :show, :create, :update, :destroy] 
-      resources :reservations
-      devise_for :users, controllers: {
-        sessions: 'api/v1/users/sessions',
-        registrations: 'api/v1/users/registrations'
-      }
+      resources :movies do
+        resources :reviews, only: [:index, :show, :create, :update, :destroy]
+      end
     end
   end
 end
