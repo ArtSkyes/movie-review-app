@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   apipie
 
-  # Root route
+  post 'signup', to: 'users#create'
+  post 'auth/login', to: 'authentication#authenticate'
+
   root to: redirect('/apipie')
 
   namespace :api do

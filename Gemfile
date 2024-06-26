@@ -70,3 +70,7 @@ gem 'rubocop-capybara', '~> 2.21'
 gem 'bcrypt'
 
 gem 'jwt'
+
+gem 'rack-cors'
+
+gem 'dotenv'
